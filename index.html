@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="bower_components/famous-angular/dist/famous-angular.css">
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/famous/dist/famous-global.js"></script>
+    <script src="bower_components/famous-angular/dist/famous-angular.js"></script>
+    <script src="src/envy-slider.js"></script>
+    <script src="src/envy-thumb.js"></script>
+    <script src="src/envy-track-fill.js"></script>
+    <script src="src/envy-track.js"></script>
+    <script src="src/app.js"></script>
+  </head>
+  <body ng-app="envySlider" style="background-color: #ccc">
+    <fa-app style="height: 200px" ng-controller="MainCtrl">
+      <envy-slider ng-model="load.brightness">
+        <envy-thumb fa-z-index="1">
+          <svg width='40' height='40'>
+            <circle r='10' cx='20' cy='20' fill='white'/>
+            <circle r='18' cx='20' cy='20' fill='white' opacity='0' stroke='white' stroke-width='1'/>
+          </svg>
+        </envy-thumb>
+        <envy-track fa-size="[300,40]" fa-background-color="'silver'"></envy-track>
+        <envy-track-fill fa-size="[300,40]" fa-background-color="'#F9CD50'"></envy-track-fill>
+      </envy-slider>
+      <fa-modifier fa-translate="[100,100,0]">
+        <fa-surface>
+          <form>
+            <input type="text" ng-model="load.brightness"></input>
+
+            <tt>{{load.brightness}}</tt>
+          </form>
+        </fa-surface>
+      </fa-modifier>
+    </fa-app>
+
+  </body>
+</html>
