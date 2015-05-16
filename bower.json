@@ -1,10 +1,10 @@
 {
   "name": "envy-sliders",
-  "description": "Custom sliders for Control Envy",
+  "description": "Custom sliders for Famous-Angular",
   "version": "0.0.1",
   "license": "MIT",
   "main": [
-    "dist/envy-sliders.js"
+    ""
   ],
   "dependencies": {
     "famous-angular": "0.5.2"

@@ -10,10 +10,10 @@
 */
 
 angular.module('famous.angular')
-  .directive('envyThumb', ['$famous', '$famousDecorator', '$interpolate', '$controller', '$compile', function ($famous, $famousDecorator, $interpolate, $controller, $compile) {
+  .directive('envyThumb', ['$famous', '$famousDecorator', '$interpolate', '$controller', '$compile', '$rootScope', function ($famous, $famousDecorator, $interpolate, $controller, $compile, $rootScope) {
     'use strict';
     return {
-      scope: true,
+      scope: false,
       transclude: true,
       template: '<div class="fa-surface"></div>',
       restrict: 'EA',
@@ -22,8 +22,9 @@ angular.module('famous.angular')
           pre: function(scope, element, attrs){
 
             var isolate = $famousDecorator.ensureIsolate(scope);
-            var Engine = $famous['famous/core/Engine'];
             var Surface = $famous['famous/core/Surface'];
+            var Transform = $famous['famous/core/Transform'];
+            var Modifier = $famous['famous/core/Modifier'];
             var Draggable = $famous['famous/modifiers/Draggable'];
 
             scope.$watch(
@@ -33,6 +34,24 @@ angular.module('famous.angular')
               function(){
                 if(isolate.surfaceNode) {
                   isolate.surfaceNode.setProperties(isolate.getProperties());
+                }
+              },
+              true
+            );
+
+            scope.$watch('main.ngModel',
+              function(){
+                if(scope.main.ngModel){
+                  var new_pos = function() {
+                    if ((Number(scope.main.ngModel)/100) > 1) {
+                      return faDrag[dragDirection];
+                    } else if ((Number(scope.main.ngModel)/100) < 0) {
+                      return 0;
+                    } else {
+                      return (Number(scope.main.ngModel)/100) * faDrag[dragDirection];
+                    }
+                  };
+                  isolate.draggable.setPosition([new_pos(), 0]);
                 }
               },
               true
@@ -78,17 +97,35 @@ angular.module('famous.angular')
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
 
-            var node = Engine.createContext();
+            var draggableRange = {
+              xRange: [0, 0],
+              yRange: [0, 0]
+            };
 
-            isolate.draggable = new Draggable({
-              xRange: [0, 300],
-              yRange: [0,0]
-            });
+            // TODO: Implement (optional) snapping.
+            var faDrag = JSON.parse(attrs.faDrag);
+            var dragDirection = function() {
+              if (faDrag[0] > faDrag[1]) {
+                return 0;
+              } else if (faDrag[0] < faDrag[1]) {
+                return 1;
+              } else {
+                return -1;
+              }
+            }();
+
+            draggableRange.xRange = [0, faDrag[0]];
+            draggableRange.yRange = [0, faDrag[1]];
+
+            isolate.draggable = new Draggable(draggableRange);
 
             isolate.draggable.on('update', function(e) {
-              scope.$parent.ngModel = (e.position[0]/300)*100;
+              scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              if (!$rootScope.$$phase) $rootScope.$digest();
+            });
 
-              console.log(scope.ngModel);
+            isolate.draggable.on('end', function(e) {
+              scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
             });
 
             isolate.surfaceNode = new Surface({
@@ -98,13 +135,18 @@ angular.module('famous.angular')
 
             isolate.draggable.subscribe(isolate.surfaceNode);
 
-            isolate.renderNode = node.add(isolate.draggable).add(isolate.surfaceNode);
+            if (attrs.faTranslate) {
+              isolate.modifier = new Modifier({
+                transform: Transform.translate.apply(this, JSON.parse(attrs.faTranslate))
+              });
+              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.modifier).add(isolate.surfaceNode);
+            } else {
+              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.surfaceNode);
+            }
+
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */
-
-            $famousDecorator.addRole('renderable',isolate);
-            isolate.show();
 
             if (attrs.class) {
               isolate.surfaceNode.setClasses(attrs['class'].split(' '));
@@ -134,11 +176,6 @@ angular.module('famous.angular')
             transclude(scope, function(clone) {
               angular.element(element[0].querySelectorAll('div.fa-surface')).append(clone);
             });
-
-            $famousDecorator.registerChild(scope, element, isolate, function() {
-            });
-
-
           }
         };
       }
