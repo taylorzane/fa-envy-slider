@@ -20,7 +20,12 @@ angular.module('famous.angular')
       template: '<div></div>',
       restrict: 'E',
       transclude: true,
-      scope: {ngModel: '='},
+      scope: {
+        ngModel: '=',
+        faDraggableStart: '&',
+        faDraggableUpdate: '&',
+        faDraggableEnd: '&'
+      },
       compile: function(tElement, tAttrs){
         return  {
           pre: function(scope, element, attrs){
@@ -41,7 +46,25 @@ angular.module('famous.angular')
             );
 
             //  FIXME: This shouldn't be necessary to init the binding.
-            scope.main.ngModel = 0;
+            if (scope.main.ngModel === undefined) scope.main.ngModel = 0; // jshint ignore:line
+
+            // debugger;
+
+            scope.draggableCallbacks = function(){
+              var callbacks = { start: false, update: false, end: false };
+              if (attrs.faDraggableStart) {
+                callbacks.start = true;
+              }
+              if (attrs.faDraggableUpdate) {
+                callbacks.update = true;
+              }
+              if (attrs.faDraggableEnd) {
+                callbacks.end = true;
+              }
+
+              return callbacks;
+            }();
+
 
             console.log('envy-slider loaded.');
           },
@@ -162,13 +185,47 @@ angular.module('famous.angular')
 
             isolate.draggable = new Draggable(draggableRange);
 
+            isolate.draggable.on('start', function(e) {
+              if (scope.draggableCallbacks.start) {
+                // scope.main.faDraggableStart({arg1: 'some_value'});
+              } else {
+                // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              }
+
+             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+            });
+
             isolate.draggable.on('update', function(e) {
-              scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
-              if (!$rootScope.$$phase) $rootScope.$digest();
+              // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+
+              /* START CALLBACK FUNCTIONALITY */
+
+              // debugger;
+
+              // scope.$eval(attrs.faDraggableUpdate, {arg1: (e.position[0]/faDrag[dragDirection])*100})
+              if (scope.draggableCallbacks.update) {
+                scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              } else {
+                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              }
+              // debugger;
+              // $parse(attrs.faDraggableUpdate)(scope.$parent, { arg1: (e.position[0]/faDrag[dragDirection])*100 });
+              // callback = "callback(item.id, arg2)"
+
+              /* END CALLBACK FUNCTIONALITY */
+
+              if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
             isolate.draggable.on('end', function(e) {
-              scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              if (scope.draggableCallbacks.end) {
+                scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              } else {
+                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              }
+
+
+             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
             isolate.surfaceNode = new Surface({
@@ -352,8 +409,14 @@ angular.module('famous.angular')
                   };
                   isolate.surfaceNode.setSize([new_size(original_size), original_size[1]]);
                 }
-              }
+              },
+              true
             );
+
+            // FIXME: This shouldn't be necessary.
+            // cont.: This should also be for vertical and horizontal.
+            // Bootstrap the track.
+            isolate.surfaceNode.setSize([0, scope.$eval(attrs.faSize)[1]]);
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */

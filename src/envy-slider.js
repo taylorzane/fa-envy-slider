@@ -20,7 +20,12 @@ angular.module('famous.angular')
       template: '<div></div>',
       restrict: 'E',
       transclude: true,
-      scope: {ngModel: '='},
+      scope: {
+        ngModel: '=',
+        faDraggableStart: '&',
+        faDraggableUpdate: '&',
+        faDraggableEnd: '&'
+      },
       compile: function(tElement, tAttrs){
         return  {
           pre: function(scope, element, attrs){
@@ -41,7 +46,25 @@ angular.module('famous.angular')
             );
 
             //  FIXME: This shouldn't be necessary to init the binding.
-            scope.main.ngModel = 0;
+            if (scope.main.ngModel === undefined) scope.main.ngModel = 0; // jshint ignore:line
+
+            // debugger;
+
+            scope.draggableCallbacks = function(){
+              var callbacks = { start: false, update: false, end: false };
+              if (attrs.faDraggableStart) {
+                callbacks.start = true;
+              }
+              if (attrs.faDraggableUpdate) {
+                callbacks.update = true;
+              }
+              if (attrs.faDraggableEnd) {
+                callbacks.end = true;
+              }
+
+              return callbacks;
+            }();
+
 
             console.log('envy-slider loaded.');
           },

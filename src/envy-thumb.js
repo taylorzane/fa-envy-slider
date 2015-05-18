@@ -101,13 +101,47 @@ angular.module('famous.angular')
 
             isolate.draggable = new Draggable(draggableRange);
 
+            isolate.draggable.on('start', function(e) {
+              if (scope.draggableCallbacks.start) {
+                // scope.main.faDraggableStart({arg1: 'some_value'});
+              } else {
+                // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              }
+
+             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+            });
+
             isolate.draggable.on('update', function(e) {
-              scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
-              if (!$rootScope.$$phase) $rootScope.$digest();
+              // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+
+              /* START CALLBACK FUNCTIONALITY */
+
+              // debugger;
+
+              // scope.$eval(attrs.faDraggableUpdate, {arg1: (e.position[0]/faDrag[dragDirection])*100})
+              if (scope.draggableCallbacks.update) {
+                scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              } else {
+                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              }
+              // debugger;
+              // $parse(attrs.faDraggableUpdate)(scope.$parent, { arg1: (e.position[0]/faDrag[dragDirection])*100 });
+              // callback = "callback(item.id, arg2)"
+
+              /* END CALLBACK FUNCTIONALITY */
+
+              if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
             isolate.draggable.on('end', function(e) {
-              scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              if (scope.draggableCallbacks.end) {
+                scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              } else {
+                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              }
+
+
+             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
             isolate.surfaceNode = new Surface({

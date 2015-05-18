@@ -108,8 +108,14 @@ angular.module('famous.angular')
                   };
                   isolate.surfaceNode.setSize([new_size(original_size), original_size[1]]);
                 }
-              }
+              },
+              true
             );
+
+            // FIXME: This shouldn't be necessary.
+            // cont.: This should also be for vertical and horizontal.
+            // Bootstrap the track.
+            isolate.surfaceNode.setSize([0, scope.$eval(attrs.faSize)[1]]);
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */
