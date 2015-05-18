@@ -40,6 +40,9 @@ angular.module('famous.angular')
               }
             );
 
+            //  FIXME: This shouldn't be necessary to init the binding.
+            scope.main.ngModel = 0;
+
             console.log('envy-slider loaded.');
           },
           post: function(scope, element, attrs, ctrl, transclude){
@@ -92,24 +95,6 @@ angular.module('famous.angular')
               function(){
                 if(isolate.surfaceNode) {
                   isolate.surfaceNode.setProperties(isolate.getProperties());
-                }
-              },
-              true
-            );
-
-            scope.$watch('main.ngModel',
-              function(){
-                if(scope.main.ngModel){
-                  var new_pos = function() {
-                    if ((Number(scope.main.ngModel)/100) > 1) {
-                      return faDrag[dragDirection];
-                    } else if ((Number(scope.main.ngModel)/100) < 0) {
-                      return 0;
-                    } else {
-                      return (Number(scope.main.ngModel)/100) * faDrag[dragDirection];
-                    }
-                  };
-                  isolate.draggable.setPosition([new_pos(), 0]);
                 }
               },
               true
@@ -202,6 +187,23 @@ angular.module('famous.angular')
               scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.surfaceNode);
             }
 
+            scope.$watch('main.ngModel',
+              function(){
+                if(scope.main.ngModel !== undefined){
+                  var new_pos = function() {
+                    if ((Number(scope.main.ngModel)/100) > 1) {
+                      return faDrag[dragDirection];
+                    } else if ((Number(scope.main.ngModel)/100) < 0) {
+                      return 0;
+                    } else {
+                      return (Number(scope.main.ngModel)/100) * faDrag[dragDirection];
+                    }
+                  };
+                  isolate.draggable.setPosition([new_pos(), 0]);
+                }
+              },
+              true
+            );
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */
@@ -281,25 +283,6 @@ angular.module('famous.angular')
               true
             );
 
-            scope.$watch('main.ngModel',
-              function(){
-                if(scope.main.ngModel){
-                  var original_size = JSON.parse(attrs.faSize);
-                  var new_size = function(o) {
-                    if ((Number(scope.main.ngModel)/100) > 1) {
-                      return o[0];
-                    } else if ((Number(scope.main.ngModel)/100) < 0) {
-                      return 0;
-                    } else {
-                      return (Number(scope.main.ngModel)/100) * o[0];
-                    }
-                  };
-                  isolate.surfaceNode.setSize([new_size(original_size), original_size[1]]);
-                }
-              },
-              true
-            );
-
             var _propToFaProp = function(prop){
               return "fa" + prop.charAt(0).toUpperCase() + prop.slice(1);
             };
@@ -353,6 +336,24 @@ angular.module('famous.angular')
             } else {
               scope.isolate[scope.$id].renderNode.add(isolate.surfaceNode);
             }
+
+            scope.$watch('main.ngModel',
+              function(){
+                if(scope.main.ngModel !== undefined){
+                  var original_size = JSON.parse(attrs.faSize);
+                  var new_size = function(o) {
+                    if ((Number(scope.main.ngModel)/100) > 1) {
+                      return o[0];
+                    } else if ((Number(scope.main.ngModel)/100) < 0) {
+                      return 0;
+                    } else {
+                      return (Number(scope.main.ngModel)/100) * o[0];
+                    }
+                  };
+                  isolate.surfaceNode.setSize([new_size(original_size), original_size[1]]);
+                }
+              }
+            );
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */

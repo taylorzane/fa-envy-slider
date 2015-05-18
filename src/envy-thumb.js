@@ -39,24 +39,6 @@ angular.module('famous.angular')
               true
             );
 
-            scope.$watch('main.ngModel',
-              function(){
-                if(scope.main.ngModel){
-                  var new_pos = function() {
-                    if ((Number(scope.main.ngModel)/100) > 1) {
-                      return faDrag[dragDirection];
-                    } else if ((Number(scope.main.ngModel)/100) < 0) {
-                      return 0;
-                    } else {
-                      return (Number(scope.main.ngModel)/100) * faDrag[dragDirection];
-                    }
-                  };
-                  isolate.draggable.setPosition([new_pos(), 0]);
-                }
-              },
-              true
-            );
-
             var _propToFaProp = function(prop){
               return "fa" + prop.charAt(0).toUpperCase() + prop.slice(1);
             };
@@ -144,6 +126,23 @@ angular.module('famous.angular')
               scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.surfaceNode);
             }
 
+            scope.$watch('main.ngModel',
+              function(){
+                if(scope.main.ngModel !== undefined){
+                  var new_pos = function() {
+                    if ((Number(scope.main.ngModel)/100) > 1) {
+                      return faDrag[dragDirection];
+                    } else if ((Number(scope.main.ngModel)/100) < 0) {
+                      return 0;
+                    } else {
+                      return (Number(scope.main.ngModel)/100) * faDrag[dragDirection];
+                    }
+                  };
+                  isolate.draggable.setPosition([new_pos(), 0]);
+                }
+              },
+              true
+            );
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */

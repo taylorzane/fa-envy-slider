@@ -7,11 +7,11 @@
     <script src="dist/envy-slider.js"></script>
     <script src="src/app.js"></script>
   </head>
-  <body ng-app="envySlider" style="background-color: #ccc">
-    <fa-app style="height: 200px" ng-controller="MainCtrl as main">
+  <body ng-app="famous.angular" style="background-color: #ccc">
+    <fa-app style="height: 200px" ng-controller="MainCtrl">
 
 
-      <envy-slider ng-model="main.brightness">
+      <envy-slider ng-model="MainCtrl.brightness" fa-size="[40,40]">
         <envy-thumb fa-translate="[20,28,0]" fa-z-index="1" fa-size="[40,40]" fa-drag="[200,0]">
           <svg width='40' height='40'>
             <circle r='10' cx='20' cy='20' fill='white'/>
@@ -26,8 +26,8 @@
       <fa-modifier fa-translate="[100,100,0]">
         <fa-surface>
           <pre>
-          Brightness: <input ng-model="main.brightness"></input>
-          Brightness: {{main.brightness}}
+          Brightness: <input ng-model="MainCtrl.brightness"></input>
+          Brightness: {{MainCtrl.brightness}}
           </pre>
         </fa-surface>
       </fa-modifier>

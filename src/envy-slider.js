@@ -40,6 +40,9 @@ angular.module('famous.angular')
               }
             );
 
+            //  FIXME: This shouldn't be necessary to init the binding.
+            scope.main.ngModel = 0;
+
             console.log('envy-slider loaded.');
           },
           post: function(scope, element, attrs, ctrl, transclude){
