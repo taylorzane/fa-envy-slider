@@ -39,6 +39,8 @@ angular.module('famous.angular')
                 isolate.renderNode.add(data.renderGate);
               }
             );
+
+            console.log('envy-slider loaded.');
           },
           post: function(scope, element, attrs, ctrl, transclude){
             var isolate = $famousDecorator.ensureIsolate(scope);
