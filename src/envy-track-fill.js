@@ -98,12 +98,12 @@ angular.module('famous.angular')
                 if(scope.main.ngModel !== undefined){
                   var original_size = JSON.parse(attrs.faSize);
                   var new_size = function(o) {
-                    if ((Number(scope.main.ngModel)/100) > 1) {
+                    if ((parseInt(scope.main.ngModel)/100) > 1) {
                       return o[0];
-                    } else if ((Number(scope.main.ngModel)/100) < 0) {
+                    } else if ((parseInt(scope.main.ngModel)/100) < 0) {
                       return 0;
                     } else {
-                      return (Number(scope.main.ngModel)/100) * o[0];
+                      return (parseInt(scope.main.ngModel)/100) * o[0];
                     }
                   };
                   isolate.surfaceNode.setSize([new_size(original_size), original_size[1]]);
