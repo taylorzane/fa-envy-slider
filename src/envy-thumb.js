@@ -173,7 +173,7 @@ angular.module('famous.angular')
                   };
 
                   // if update-when-dragging is false and user is not dragging OR update-when-dragging is true
-                  if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging) {
+                  if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging || scope.main.faUpdateWhenDragging === undefined) {
                     isolate.draggable.setPosition([new_pos(), 0]);
                   }
                 }
