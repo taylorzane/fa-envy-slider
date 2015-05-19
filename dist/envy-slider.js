@@ -215,7 +215,25 @@ angular.module('famous.angular')
 
             isolate.draggable.on('end', function(e) {
               if (scope.draggableCallbacks.end) {
-                // scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
+                if (e.position[0] === 0) {
+                  scope.main.faDraggableEnd({arg1: true});
+                } else if (e.position[0] === faDrag[dragDirection]) {
+                  scope.main.faDraggableEnd({arg1: false});
+                } else if (e.position[0] <= initialDragPosition) {
+                  if (e.position[0] <= faDrag[dragDirection]*.5) {
+                    scope.main.faDraggableEnd({arg1: false});
+                    isolate.draggable.setPosition([0,0]);
+                  } else {
+                    isolate.draggable.setPosition(faDrag);
+                  }
+                } else if (e.position[0] > initialDragPosition) {
+                  if (e.position[0] > faDrag[dragDirection]*.5) {
+                    scope.main.faDraggableEnd({arg1: true});
+                    isolate.draggable.setPosition(faDrag);
+                  } else {
+                    isolate.draggable.setPosition([0,0]);
+                  }
+                }
               } else {
                 if (e.position[0] === 0) {
                   scope.main.ngModel = true;
