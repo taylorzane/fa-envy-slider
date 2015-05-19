@@ -130,6 +130,7 @@ angular.module('famous.angular')
 
             isolate.draggable.on('end', function(e) {
               if (scope.draggableCallbacks.end) {
+                debugger;
                 if (e.position[0] === 0) {
                   scope.main.faDraggableEnd({arg1: true});
                 } else if (e.position[0] === faDrag[dragDirection]) {
