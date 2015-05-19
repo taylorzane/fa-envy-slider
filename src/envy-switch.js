@@ -1,16 +1,16 @@
 /**
-* Custom Thumb element for Control Envy.
+* Custom Switch element for Control Envy.
 * Used with envy-slider, -track, and -track-fill.
 *
 * Requirements:
-* Must two-way bind to a load (brightness).
-* Must be draggable.
+* Must two-way bind to a load (power).
+* Must be draggable (but snap to 0% or 100%).
 * Must accept any markup for Surface content.
 *
 */
 
 angular.module('famous.angular')
-  .directive('envyThumb', ['$famous', '$famousDecorator', '$interpolate', '$controller', '$compile', '$rootScope', function ($famous, $famousDecorator, $interpolate, $controller, $compile, $rootScope) {
+  .directive('envySwitch', ['$famous', '$famousDecorator', '$interpolate', '$controller', '$compile', '$rootScope', function ($famous, $famousDecorator, $interpolate, $controller, $compile, $rootScope) {
     'use strict';
     return {
       scope: false,
@@ -32,8 +32,8 @@ angular.module('famous.angular')
                 return isolate.getProperties();
               },
               function(){
-                if(isolate.surfaceThumb) {
-                  isolate.surfaceThumb.setProperties(isolate.getProperties());
+                if(isolate.surfaceSwitch) {
+                  isolate.surfaceSwitch.setProperties(isolate.getProperties());
                 }
               },
               true
@@ -65,7 +65,7 @@ angular.module('famous.angular')
             var _sizeAnimateTimeStamps = [];
 
             attrs.$observe('faSize',function () {
-              isolate.surfaceThumb.setSize(scope.$eval(attrs.faSize));
+              isolate.surfaceSwitch.setSize(scope.$eval(attrs.faSize));
               _sizeAnimateTimeStamps.push(new Date());
 
               if(_sizeAnimateTimeStamps.length > 5) {
@@ -101,81 +101,88 @@ angular.module('famous.angular')
 
             isolate.draggable = new Draggable(draggableRange);
 
-            // Value for fa-update-when-dragging.
-            var isDragging = false;
+            var initialDragPosition;
 
             isolate.draggable.on('start', function(e) {
-              isDragging = true;
+              initialDragPosition = e.position[0];
 
-              if (scope.draggableCallbacks.start) {
-                // scope.main.faDraggableStart({arg1: 'some_value'});
+              // if (scope.draggableCallbacks.start) {
+              //   scope.main.faDraggableStart({arg1: 'some_value'});
+              // } else {
+              //   scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              // }
+
+             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+            });
+
+
+            /* DRAGGABLE UPDATE
+            isolate.draggable.on('update', function(e) {
+              if (scope.draggableCallbacks.update) {
+                // scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
               } else {
                 // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
               }
 
-             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
-            });
-
-            isolate.draggable.on('update', function(e) {
-              /* START CALLBACK FUNCTIONALITY */
-
-              if (scope.draggableCallbacks.update) {
-                scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
-              } else {
-                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
-              }
-
-              /* END CALLBACK FUNCTIONALITY */
-
               if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
+            */
 
             isolate.draggable.on('end', function(e) {
-              isDragging = false;
-
               if (scope.draggableCallbacks.end) {
-                scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
+                // scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
               } else {
-                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+                if (e.position[0] === 0) {
+                  scope.main.ngModel = true;
+                } else if (e.position[0] === faDrag[dragDirection]) {
+                  scope.main.ngModel = false;
+                } else if (e.position[0] <= initialDragPosition) {
+                  if (e.position[0] <= faDrag[dragDirection]*.5) {
+                    scope.main.ngModel = false;
+                    isolate.draggable.setPosition([0,0]);
+                  } else {
+                    isolate.draggable.setPosition(faDrag);
+                  }
+                } else if (e.position[0] > initialDragPosition) {
+                  if (e.position[0] > faDrag[dragDirection]*.5) {
+                    scope.main.ngModel = true;
+                    isolate.draggable.setPosition(faDrag);
+                  } else {
+                    isolate.draggable.setPosition([0,0]);
+                  }
+                }
               }
-
 
              if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
-            isolate.surfaceThumb = new Surface({
+            isolate.surfaceSwitch = new Surface({
               size: scope.$eval(attrs.faSize),
               properties: isolate.getProperties()
             });
 
-            isolate.draggable.subscribe(isolate.surfaceThumb);
+            isolate.draggable.subscribe(isolate.surfaceSwitch);
 
             if (attrs.faTranslate) {
               isolate.modifier = new Modifier({
                 transform: Transform.translate.apply(this, JSON.parse(attrs.faTranslate))
               });
-              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.modifier).add(isolate.surfaceThumb);
+              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.modifier).add(isolate.surfaceSwitch);
             } else {
-              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.surfaceThumb);
+              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.surfaceSwitch);
             }
 
             scope.$watch('main.ngModel',
               function(){
                 if(scope.main.ngModel !== undefined){
                   var new_pos = function() {
-                    if ((parseInt(scope.main.ngModel)/100) > 1) {
+                    if (scope.main.ngModel) {
                       return faDrag[dragDirection];
-                    } else if ((parseInt(scope.main.ngModel)/100) < 0) {
-                      return 0;
                     } else {
-                      return (parseInt(scope.main.ngModel)/100) * faDrag[dragDirection];
+                      return 0;
                     }
                   };
-
-                  // if update-when-dragging is false and user is not dragging OR update-when-dragging is true
-                  if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging) {
-                    isolate.draggable.setPosition([new_pos(), 0]);
-                  }
+                  isolate.draggable.setPosition([new_pos(), 0]);
                 }
               },
               true
@@ -185,10 +192,10 @@ angular.module('famous.angular')
             /* --- END CUSTOM MAGIC --- */
 
             if (attrs.class) {
-              isolate.surfaceThumb.setClasses(attrs['class'].split(' '));
+              isolate.surfaceSwitch.setClasses(attrs['class'].split(' '));
             }
             if(attrs.faDeploy){
-              isolate.surfaceThumb.on("deploy",function(){
+              isolate.surfaceSwitch.on("deploy",function(){
                 var fn = scope[attrs.faDeploy];
                 if(typeof fn === 'function') {
                   fn(attrs.faDeploy)();
@@ -204,7 +211,7 @@ angular.module('famous.angular')
             var isolate = $famousDecorator.ensureIsolate(scope);
 
             var updateContent = function() {
-              isolate.surfaceThumb.setContent(element[0].querySelector('div.fa-surface'));
+              isolate.surfaceSwitch.setContent(element[0].querySelector('div.fa-surface'));
             };
 
             updateContent();

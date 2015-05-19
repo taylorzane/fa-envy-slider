@@ -22,6 +22,7 @@ angular.module('famous.angular')
       transclude: true,
       scope: {
         ngModel: '=',
+        faUpdateWhenDragging: '=',
         faDraggableStart: '&',
         faDraggableUpdate: '&',
         faDraggableEnd: '&'
@@ -48,8 +49,6 @@ angular.module('famous.angular')
             //  FIXME: This shouldn't be necessary to init the binding.
             if (scope.main.ngModel === undefined) scope.main.ngModel = 0; // jshint ignore:line
 
-            // debugger;
-
             scope.draggableCallbacks = function(){
               var callbacks = { start: false, update: false, end: false };
               if (attrs.faDraggableStart) {
@@ -65,6 +64,8 @@ angular.module('famous.angular')
               return callbacks;
             }();
 
+            // Define default value for update-when-dragging.
+            scope.main.faUpdateWhenDragging = (scope.main.faUpdateWhenDragging === undefined) ? true : scope.main.faUpdateWhenDragging;
 
             console.log('envy-slider loaded.');
           },

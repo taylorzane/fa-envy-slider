@@ -5,38 +5,17 @@
     <script src="http://code.famo.us/famous/0.3.4/famous-global.js"></script>
     <script src="http://code.famo.us/famous-angular/0.6.0/famous-angular.js"></script>
     <script src="dist/envy-slider.js"></script>
-    <!-- <script src="src/envy-slider.js"></script>
+    <script src="src/envy-slider.js"></script>
     <script src="src/envy-thumb.js"></script>
     <script src="src/envy-track.js"></script>
-    <script src="src/envy-track-fill.js"></script> -->
-    <script src="src/app.js"></script>
+    <script src="src/envy-track-fill.js"></script>
+    <!-- <script src="src/app.js"></script> -->
   </head>
-  <body ng-app="famous.angular" style="background-color: #ccc">
-    <fa-app style="height: 200px" ng-controller="MainCtrl as main">
-
-      <envy-slider
-        fa-draggable-update="main.brightnessSet(arg1, {user: true})"
-        ng-model="main.brightness"
-        fa-size="[40,40]">
-        <envy-thumb fa-translate="[20,28,0]"fa-z-index="1"fa-size="[40,40]"fa-drag="[200,0]">
-          <svg width='40' height='40'>
-            <circle r='10' cx='20' cy='20' fill='white'/>
-          </svg>
-        </envy-thumb>
-        <envy-track fa-translate="[40,46,0]" fa-size="[200,4]" fa-background-color="'silver'"/>
-        <envy-track-fill fa-translate="[40,46,0]" fa-size="[200,4]" fa-background-color="'#F9CD50'"/>
-      </envy-slider>
-
-
-
-      <fa-modifier fa-translate="[100,100,0]">
-        <fa-surface>
-          <pre>
-          Brightness: <input ng-model="main.brightness"></input>
-          Brightness: {{main.brightness}}
-          </pre>
-        </fa-surface>
-      </fa-modifier>
-    </fa-app>
+  <body style="background-color: #ccc">
+    <h1><pre>Envy Module Examples</pre></h1>
+    <ul>
+    <li><pre><a href="examples/slider.html">Envy Slider</a></pre></li>
+    <li><pre><a href="examples/switch.html">Envy Switch</a></pre></li>
+    </ul>
   </body>
 </html>

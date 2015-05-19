@@ -32,8 +32,8 @@ angular.module('famous.angular')
                 return isolate.getProperties();
               },
               function(){
-                if(isolate.surfaceNode) {
-                  isolate.surfaceNode.setProperties(isolate.getProperties());
+                if(isolate.surfaceTrackFill) {
+                  isolate.surfaceTrackFill.setProperties(isolate.getProperties());
                 }
               },
               true
@@ -65,7 +65,7 @@ angular.module('famous.angular')
             var _sizeAnimateTimeStamps = [];
 
             attrs.$observe('faSize',function () {
-              isolate.surfaceNode.setSize(scope.$eval(attrs.faSize));
+              isolate.surfaceTrackFill.setSize(scope.$eval(attrs.faSize));
               _sizeAnimateTimeStamps.push(new Date());
 
               if(_sizeAnimateTimeStamps.length > 5) {
@@ -79,7 +79,7 @@ angular.module('famous.angular')
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
 
-            isolate.surfaceNode = new Surface({
+            isolate.surfaceTrackFill = new Surface({
               size: scope.$eval(attrs.faSize),
               properties: isolate.getProperties()
             });
@@ -88,25 +88,30 @@ angular.module('famous.angular')
               isolate.modifier = new Modifier({
                 transform: Transform.translate.apply(this, JSON.parse(attrs.faTranslate))
               });
-              scope.isolate[scope.$id].renderNode.add(isolate.modifier).add(isolate.surfaceNode);
+              scope.isolate[scope.$id].renderNode.add(isolate.modifier).add(isolate.surfaceTrackFill);
             } else {
-              scope.isolate[scope.$id].renderNode.add(isolate.surfaceNode);
+              scope.isolate[scope.$id].renderNode.add(isolate.surfaceTrackFill);
             }
 
             scope.$watch('main.ngModel',
               function(){
                 if(scope.main.ngModel !== undefined){
                   var original_size = JSON.parse(attrs.faSize);
-                  var new_size = function(o) {
-                    if ((parseInt(scope.main.ngModel)/100) > 1) {
-                      return o[0];
-                    } else if ((parseInt(scope.main.ngModel)/100) < 0) {
-                      return 0;
-                    } else {
-                      return (parseInt(scope.main.ngModel)/100) * o[0];
-                    }
-                  };
-                  isolate.surfaceNode.setSize([new_size(original_size), original_size[1]]);
+                  if (typeof(scope.main.ngModel) === 'number') {
+                    var new_size = function(o) {
+                      if ((parseInt(scope.main.ngModel)/100) > 1) {
+                        return o[0];
+                      } else if ((parseInt(scope.main.ngModel)/100) < 0) {
+                        return 0;
+                      } else {
+                        return (parseInt(scope.main.ngModel)/100) * o[0];
+                      }
+                    };
+                    isolate.surfaceTrackFill.setSize([new_size(original_size), original_size[1]]);
+                  } else if (typeof(scope.main.ngModel) === 'boolean') {
+                    // Do boolean stuff here.
+                    isolate.surfaceTrackFill.setProperties({opacity: (scope.main.ngModel ? 1 : 0)});
+                  }
                 }
               },
               true
@@ -115,16 +120,19 @@ angular.module('famous.angular')
             // FIXME: This shouldn't be necessary.
             // cont.: This should also be for vertical and horizontal.
             // Bootstrap the track.
-            isolate.surfaceNode.setSize([0, scope.$eval(attrs.faSize)[1]]);
+            isolate.surfaceTrackFill.setSize([0, scope.$eval(attrs.faSize)[1]]);
+            if (typeof(scope.main.ngModel) === 'boolean') {
+              isolate.surfaceTrackFill.setProperties({opacity: 0});
+            }
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */
 
             if (attrs.class) {
-              isolate.surfaceNode.setClasses(attrs['class'].split(' '));
+              isolate.surfaceTrackFill.setClasses(attrs['class'].split(' '));
             }
             if(attrs.faDeploy){
-              isolate.surfaceNode.on("deploy",function(){
+              isolate.surfaceTrackFill.on("deploy",function(){
                 var fn = scope[attrs.faDeploy];
                 if(typeof fn === 'function') {
                   fn(attrs.faDeploy)();
@@ -140,7 +148,7 @@ angular.module('famous.angular')
             var isolate = $famousDecorator.ensureIsolate(scope);
 
             var updateContent = function() {
-              isolate.surfaceNode.setContent(element[0].querySelector('div.fa-surface'));
+              isolate.surfaceTrackFill.setContent(element[0].querySelector('div.fa-surface'));
             };
 
             updateContent();

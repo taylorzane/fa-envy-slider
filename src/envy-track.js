@@ -33,7 +33,7 @@ angular.module('famous.angular')
               },
               function(){
                 if(isolate.renderNode) {
-                  isolate.surfaceNode.setProperties(isolate.getProperties());
+                  isolate.surfaceTrack.setProperties(isolate.getProperties());
                 }
               },
               true
@@ -65,7 +65,7 @@ angular.module('famous.angular')
             var _sizeAnimateTimeStamps = [];
 
             attrs.$observe('faSize',function () {
-              isolate.surfaceNode.setSize(scope.$eval(attrs.faSize));
+              isolate.surfaceTrack.setSize(scope.$eval(attrs.faSize));
               _sizeAnimateTimeStamps.push(new Date());
 
               if(_sizeAnimateTimeStamps.length > 5) {
@@ -79,7 +79,7 @@ angular.module('famous.angular')
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
 
-            isolate.surfaceNode = new Surface({
+            isolate.surfaceTrack = new Surface({
               size: scope.$eval(attrs.faSize),
               properties: isolate.getProperties()
             });
@@ -88,19 +88,19 @@ angular.module('famous.angular')
               isolate.modifier = new Modifier({
                 transform: Transform.translate.apply(this, JSON.parse(attrs.faTranslate))
               });
-              scope.isolate[scope.$id].renderNode.add(isolate.modifier).add(isolate.surfaceNode);
+              scope.isolate[scope.$id].renderNode.add(isolate.modifier).add(isolate.surfaceTrack);
             } else {
-              scope.isolate[scope.$id].renderNode.add(isolate.surfaceNode);
+              scope.isolate[scope.$id].renderNode.add(isolate.surfaceTrack);
             }
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */
 
             if (attrs.class) {
-              isolate.surfaceNode.setClasses(attrs['class'].split(' '));
+              isolate.surfaceTrack.setClasses(attrs['class'].split(' '));
             }
             if(attrs.faDeploy){
-              isolate.surfaceNode.on("deploy",function(){
+              isolate.surfaceTrack.on("deploy",function(){
                 var fn = scope[attrs.faDeploy];
                 if(typeof fn === 'function') {
                   fn(attrs.faDeploy)();
@@ -116,7 +116,7 @@ angular.module('famous.angular')
             var isolate = $famousDecorator.ensureIsolate(scope);
 
             var updateContent = function() {
-              isolate.surfaceNode.setContent(element[0].querySelector('div.fa-surface'));
+              isolate.surfaceTrack.setContent(element[0].querySelector('div.fa-surface'));
             };
 
             updateContent();
