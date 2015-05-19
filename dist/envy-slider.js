@@ -65,7 +65,7 @@ angular.module('famous.angular')
             }();
 
             // Define default value for update-when-dragging.
-            scope.main.faUpdateWhenDragging = (scope.main.faUpdateWhenDragging === undefined) ? true : scope.main.faUpdateWhenDragging;
+            // scope.main.faUpdateWhenDragging = (scope.main.faUpdateWhenDragging === undefined) ? true : scope.main.faUpdateWhenDragging;
 
             console.log('envy-slider loaded.');
           },
@@ -215,7 +215,6 @@ angular.module('famous.angular')
 
             isolate.draggable.on('end', function(e) {
               if (scope.draggableCallbacks.end) {
-                debugger;
                 if (e.position[0] === 0) {
                   scope.main.faDraggableEnd({arg1: true});
                 } else if (e.position[0] === faDrag[dragDirection]) {
@@ -504,7 +503,7 @@ angular.module('famous.angular')
                   };
 
                   // if update-when-dragging is false and user is not dragging OR update-when-dragging is true
-                  if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging) {
+                  if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging || scope.main.faUpdateWhenDragging === undefined) {
                     isolate.draggable.setPosition([new_pos(), 0]);
                   }
                 }
