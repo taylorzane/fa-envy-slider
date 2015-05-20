@@ -102,13 +102,19 @@ angular.module('famous.angular')
                   if (typeof(scope.main.ngModel) === 'number') {
                     var new_size = function(o) {
                       if ((parseInt(scope.main.ngModel)/100) >= 1) {
-                        isolate.surfaceTrackFillModifier.setOpacity(1);
+                        if (isolate.surfaceTrackFillModifier.getOpacity() !== 1) {
+                          isolate.surfaceTrackFillModifier.setOpacity(1);
+                        }
                         return o[0];
                       } else if ((parseInt(scope.main.ngModel)/100) <= 0) {
-                        isolate.surfaceTrackFillModifier.setOpacity(0);
+                        if (isolate.surfaceTrackFillModifier.getOpacity() !== 0) {
+                          isolate.surfaceTrackFillModifier.setOpacity(0);
+                        }
                         return 0;
                       } else {
-                        isolate.surfaceTrackFillModifier.setOpacity(1);
+                        if (isolate.surfaceTrackFillModifier.getOpacity() !== 1) {
+                          isolate.surfaceTrackFillModifier.setOpacity(1);
+                        }
                         return (parseInt(scope.main.ngModel)/100) * o[0];
                       }
                     };
