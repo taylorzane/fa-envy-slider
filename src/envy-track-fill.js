@@ -10,7 +10,7 @@
 */
 
 angular.module('famous.angular')
-  .directive('envyTrackFill', ['$famous', '$famousDecorator', '$interpolate', '$controller', '$compile', function ($famous, $famousDecorator, $interpolate, $controller, $compile) {
+  .directive('envyTrackFill', ['$famous', '$famousDecorator', '$interpolate', '$controller', '$compile', '$rootScope', function ($famous, $famousDecorator, $interpolate, $controller, $compile, $rootScope) {
     'use strict';
     return {
       scope: false,
@@ -109,7 +109,6 @@ angular.module('famous.angular')
                     };
                     isolate.surfaceTrackFill.setSize([new_size(original_size), original_size[1]]);
                   } else if (typeof(scope.main.ngModel) === 'boolean') {
-                    // Do boolean stuff here.
                     isolate.surfaceTrackFill.setProperties({opacity: (scope.main.ngModel ? 1 : 0)});
                   }
                 }
@@ -120,10 +119,12 @@ angular.module('famous.angular')
             // FIXME: This shouldn't be necessary.
             // cont.: This should also be for vertical and horizontal.
             // Bootstrap the track.
-            isolate.surfaceTrackFill.setSize([0, scope.$eval(attrs.faSize)[1]]);
-            if (typeof(scope.main.ngModel) === 'boolean') {
-              isolate.surfaceTrackFill.setProperties({opacity: 0});
-            }
+
+            // FIXME: We shouldn't need to do this. But at the same time...these don't work.
+            // isolate.surfaceTrackFill.setSize([0, scope.$eval(attrs.faSize)[1]]);
+            // if (typeof(scope.main.ngModel) === 'boolean') {
+            //   isolate.surfaceTrackFill.setProperties({opacity: 0});
+            // }
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */

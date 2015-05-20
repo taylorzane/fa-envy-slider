@@ -64,9 +64,6 @@ angular.module('famous.angular')
               return callbacks;
             }();
 
-            // Define default value for update-when-dragging.
-            // scope.main.faUpdateWhenDragging = (scope.main.faUpdateWhenDragging === undefined) ? true : scope.main.faUpdateWhenDragging;
-
             console.log('envy-slider loaded.');
           },
           post: function(scope, element, attrs, ctrl, transclude){

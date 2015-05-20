@@ -4,11 +4,11 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
     <script src="http://code.famo.us/famous/0.3.4/famous-global.js"></script>
     <script src="http://code.famo.us/famous-angular/0.6.0/famous-angular.js"></script>
-    <script src="../dist/envy-slider.js"></script>
-    <!-- <script src="../src/envy-slider.js"></script>
+    <!-- <script src="../dist/envy-slider.js"></script> -->
+    <script src="../src/envy-slider.js"></script>
     <script src="../src/envy-switch.js"></script>
     <script src="../src/envy-track.js"></script>
-    <script src="../src/envy-track-fill.js"></script> -->
+    <script src="../src/envy-track-fill.js"></script>
     <script src="../src/app.js"></script>
   </head>
   <body ng-app="famous.angular" style="background-color: #ccc">
@@ -20,21 +20,21 @@
 
 
 
-        <envy-track fa-translate="[50,15,0]" fa-size="[60,30]">
+        <envy-track fa-translate="[50,15,0]" fa-z-index="20" fa-size="[60,30]">
           <svg width='60' height='60'>
             <rect x='15' y='15' height='30' width='30' fill='silver'/>
             <circle r='15' cx='15' cy='30' fill='silver'/>
             <circle r='15' cx='45' cy='30' fill='silver'/>
           </svg>
         </envy-track>
-        <envy-track-fill fa-translate="[50,15,0]" fa-size="[60,30]">
+        <envy-track-fill fa-translate="[50,15,0]" fa-z-index="25" fa-size="[60,30]">
           <svg width='60' height='60'>
             <rect x='15' y='15' height='30' width='30' fill='#F9CD50'/>
             <circle r='15' cx='15' cy='30' fill='#F9CD50'/>
             <circle r='15' cx='45' cy='30' fill='#F9CD50'/>
           </svg>
         </envy-track-fill>
-        <envy-switch fa-translate="[35,15,0]" fa-z-index="1" fa-size="[60,60]" fa-drag="[30,0]">
+        <envy-switch fa-translate="[35,15,0]" fa-z-index="30" fa-size="[60,60]" fa-drag="[30,0]">
           <svg width='60' height='60'>
             <circle r='15' cx='30' cy='30' fill='white'/>
           </svg>
@@ -46,7 +46,7 @@
       <fa-modifier fa-translate="[100,100,0]">
         <fa-surface>
           <pre>
-          Power: <input ng-model="main.power"></input>
+          Power: <input type="checkbox" ng-model="main.power"></input>
           Power: {{main.power}}
           </pre>
         </fa-surface>
