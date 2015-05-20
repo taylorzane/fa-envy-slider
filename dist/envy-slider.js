@@ -662,7 +662,7 @@ angular.module('famous.angular')
                     };
                     isolate.surfaceTrackFill.setSize([new_size(original_size), original_size[1]]);
                   } else if (typeof(scope.main.ngModel) === 'boolean') {
-                    isolate.surfaceTrackFillModifier.setOpacity(scope.main.ngModel ? 1 : 0, {curve: 'bounceIn', duration : 200});
+                    isolate.surfaceTrackFillModifier.setOpacity(scope.main.ngModel ? 1 : 0, {curve: 'easeOut', duration : 200});
                   }
                 }
               },
