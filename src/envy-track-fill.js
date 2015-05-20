@@ -25,7 +25,7 @@ angular.module('famous.angular')
 
             var Surface = $famous['famous/core/Surface'];
             var Transform = $famous['famous/core/Transform'];
-            var Modifier = $famous['famous/core/Modifier'];
+            var Modifier = $famous['famous/modifiers/StateModifier'];
 
             scope.$watch(
               function(){
@@ -101,11 +101,14 @@ angular.module('famous.angular')
                   var original_size = JSON.parse(attrs.faSize);
                   if (typeof(scope.main.ngModel) === 'number') {
                     var new_size = function(o) {
-                      if ((parseInt(scope.main.ngModel)/100) > 1) {
+                      if ((parseInt(scope.main.ngModel)/100) >= 1) {
+                        isolate.surfaceTrackFillModifier.setOpacity(1);
                         return o[0];
-                      } else if ((parseInt(scope.main.ngModel)/100) < 0) {
+                      } else if ((parseInt(scope.main.ngModel)/100) <= 0) {
+                        isolate.surfaceTrackFillModifier.setOpacity(0);
                         return 0;
                       } else {
+                        isolate.surfaceTrackFillModifier.setOpacity(1);
                         return (parseInt(scope.main.ngModel)/100) * o[0];
                       }
                     };
@@ -121,6 +124,8 @@ angular.module('famous.angular')
             // FIXME: This shouldn't be necessary.
             // cont.: This should also be for vertical and horizontal.
             // Bootstrap the track.
+            isolate.surfaceTrackFillModifier.setOpacity(0); // FIXME: Should we be doing this?
+
             if (typeof(scope.main.ngModel) === 'number') {
               isolate.surfaceTrackFill.setSize([0, scope.$eval(attrs.faSize)[1]]);
             } else if (typeof(scope.main.ngModel) === 'boolean') {

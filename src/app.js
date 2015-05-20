@@ -3,7 +3,7 @@
 
 angular.module('famous.angular').controller('MainCtrl', function($scope, $famous, $timeout){
   'use strict';
-  this.brightness = 0;
+  this.brightness = 10;
   this.power = false;
 
   var _this = this;
