@@ -635,11 +635,13 @@ angular.module('famous.angular')
               properties: isolate.getProperties()
             });
 
+            // FIXME: Since we need set opacity, move the modifier
+            // cont.: outside of the faTranslate check.
             if (attrs.faTranslate) {
-              isolate.modifier = new Modifier({
+              isolate.surfaceTrackFillModifier = new Modifier({
                 transform: Transform.translate.apply(this, JSON.parse(attrs.faTranslate))
               });
-              scope.isolate[scope.$id].renderNode.add(isolate.modifier).add(isolate.surfaceTrackFill);
+              scope.isolate[scope.$id].renderNode.add(isolate.surfaceTrackFillModifier).add(isolate.surfaceTrackFill);
             } else {
               scope.isolate[scope.$id].renderNode.add(isolate.surfaceTrackFill);
             }
@@ -660,7 +662,7 @@ angular.module('famous.angular')
                     };
                     isolate.surfaceTrackFill.setSize([new_size(original_size), original_size[1]]);
                   } else if (typeof(scope.main.ngModel) === 'boolean') {
-                    isolate.surfaceTrackFill.setProperties({opacity: (scope.main.ngModel ? 1 : 0)});
+                    isolate.surfaceTrackFillModifier.setOpacity(scope.main.ngModel ? 1 : 0, {curve: 'bounceIn', duration : 200});
                   }
                 }
               },
@@ -670,12 +672,11 @@ angular.module('famous.angular')
             // FIXME: This shouldn't be necessary.
             // cont.: This should also be for vertical and horizontal.
             // Bootstrap the track.
-
-            // FIXME: We shouldn't need to do this. But at the same time...these don't work.
-            // isolate.surfaceTrackFill.setSize([0, scope.$eval(attrs.faSize)[1]]);
-            // if (typeof(scope.main.ngModel) === 'boolean') {
-            //   isolate.surfaceTrackFill.setProperties({opacity: 0});
-            // }
+            if (typeof(scope.main.ngModel) === 'number') {
+              isolate.surfaceTrackFill.setSize([0, scope.$eval(attrs.faSize)[1]]);
+            } else if (typeof(scope.main.ngModel) === 'boolean') {
+              isolate.surfaceTrackFillModifier.setOpacity(0);
+            }
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */
