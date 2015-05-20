@@ -26,6 +26,7 @@ angular.module('famous.angular')
             var Transform = $famous['famous/core/Transform'];
             var Modifier = $famous['famous/core/Modifier'];
             var Draggable = $famous['famous/modifiers/Draggable'];
+            var EventHandler = $famous['famous/core/EventHandler'];
 
             scope.$watch(
               function(){
@@ -79,6 +80,8 @@ angular.module('famous.angular')
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
 
+            isolate.thumbEvent = new EventHandler();
+
             var draggableRange = {
               xRange: [0, 0],
               yRange: [0, 0]
@@ -113,7 +116,7 @@ angular.module('famous.angular')
                 // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
               }
 
-             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+             // if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
             isolate.draggable.on('update', function(e) {
@@ -127,7 +130,8 @@ angular.module('famous.angular')
 
               /* END CALLBACK FUNCTIONALITY */
 
-              if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+
+              scope.envyEvents.trigger('thumbUpdate', {pos: e.position[0]});
             });
 
             isolate.draggable.on('end', function(e) {
@@ -140,7 +144,7 @@ angular.module('famous.angular')
               }
 
 
-             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+             // if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
             isolate.surfaceThumb = new Surface({
@@ -175,6 +179,7 @@ angular.module('famous.angular')
                   // if update-when-dragging is false and user is not dragging OR update-when-dragging is true
                   if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging || scope.main.faUpdateWhenDragging === undefined) {
                     isolate.draggable.setPosition([new_pos(), 0]);
+                    scope.envyEvents.trigger('thumbUpdate', {pos: new_pos()});
                   }
                 }
               },

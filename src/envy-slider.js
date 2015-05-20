@@ -33,6 +33,7 @@ angular.module('famous.angular')
             var isolate = $famousDecorator.ensureIsolate(scope);
 
             var ContainerSurface = $famous["famous/surfaces/ContainerSurface"];
+            var EventHandler = $famous['famous/core/EventHandler'];
 
             var options = scope.$eval(attrs.faOptions) || {};
             isolate.renderNode = new ContainerSurface(options);
@@ -63,6 +64,13 @@ angular.module('famous.angular')
 
               return callbacks;
             }();
+
+            scope.envyEvents = new EventHandler();
+
+            scope.envyEvents.on('thumbUpdate', function(e) {
+              // debugger;
+              scope.main.ngModel = e.pos/2;
+            });
 
             console.log('envy-slider loaded.');
           },

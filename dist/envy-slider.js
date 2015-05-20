@@ -33,6 +33,7 @@ angular.module('famous.angular')
             var isolate = $famousDecorator.ensureIsolate(scope);
 
             var ContainerSurface = $famous["famous/surfaces/ContainerSurface"];
+            var EventHandler = $famous['famous/core/EventHandler'];
 
             var options = scope.$eval(attrs.faOptions) || {};
             isolate.renderNode = new ContainerSurface(options);
@@ -63,6 +64,13 @@ angular.module('famous.angular')
 
               return callbacks;
             }();
+
+            scope.envyEvents = new EventHandler();
+
+            scope.envyEvents.on('thumbUpdate', function(e) {
+              // debugger;
+              scope.main.ngModel = e.pos/2;
+            });
 
             console.log('envy-slider loaded.');
           },
@@ -357,6 +365,7 @@ angular.module('famous.angular')
             var Transform = $famous['famous/core/Transform'];
             var Modifier = $famous['famous/core/Modifier'];
             var Draggable = $famous['famous/modifiers/Draggable'];
+            var EventHandler = $famous['famous/core/EventHandler'];
 
             scope.$watch(
               function(){
@@ -410,6 +419,8 @@ angular.module('famous.angular')
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
 
+            isolate.thumbEvent = new EventHandler();
+
             var draggableRange = {
               xRange: [0, 0],
               yRange: [0, 0]
@@ -444,7 +455,7 @@ angular.module('famous.angular')
                 // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
               }
 
-             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+             // if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
             isolate.draggable.on('update', function(e) {
@@ -458,7 +469,8 @@ angular.module('famous.angular')
 
               /* END CALLBACK FUNCTIONALITY */
 
-              if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+
+              scope.envyEvents.trigger('thumbUpdate', {pos: e.position[0]});
             });
 
             isolate.draggable.on('end', function(e) {
@@ -471,7 +483,7 @@ angular.module('famous.angular')
               }
 
 
-             if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+             // if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
             isolate.surfaceThumb = new Surface({
@@ -506,6 +518,7 @@ angular.module('famous.angular')
                   // if update-when-dragging is false and user is not dragging OR update-when-dragging is true
                   if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging || scope.main.faUpdateWhenDragging === undefined) {
                     isolate.draggable.setPosition([new_pos(), 0]);
+                    scope.envyEvents.trigger('thumbUpdate', {pos: new_pos()});
                   }
                 }
               },
@@ -577,6 +590,7 @@ angular.module('famous.angular')
             var Surface = $famous['famous/core/Surface'];
             var Transform = $famous['famous/core/Transform'];
             var Modifier = $famous['famous/modifiers/StateModifier'];
+            var EventHandler = $famous['famous/core/EventHandler'];
 
             scope.$watch(
               function(){
@@ -630,6 +644,8 @@ angular.module('famous.angular')
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
 
+            isolate.trackEvent = new EventHandler();
+
             isolate.surfaceTrackFill = new Surface({
               size: scope.$eval(attrs.faSize),
               properties: isolate.getProperties()
@@ -646,30 +662,36 @@ angular.module('famous.angular')
               scope.isolate[scope.$id].renderNode.add(isolate.surfaceTrackFill);
             }
 
+            var setTrackFillSize = function() {
+              var original_size = JSON.parse(attrs.faSize);
+              var new_size = function(o) {
+                if ((parseInt(scope.main.ngModel)/100) >= 1) {
+                  if (isolate.surfaceTrackFillModifier.getOpacity() !== 1) {
+                    isolate.surfaceTrackFillModifier.setOpacity(1);
+                  }
+                  return o[0];
+                } else if ((parseInt(scope.main.ngModel)/100) <= 0) {
+                  if (isolate.surfaceTrackFillModifier.getOpacity() !== 0) {
+                    isolate.surfaceTrackFillModifier.setOpacity(0);
+                  }
+                  return 0;
+                } else {
+                  if (isolate.surfaceTrackFillModifier.getOpacity() !== 1) {
+                    isolate.surfaceTrackFillModifier.setOpacity(1);
+                  }
+                  return (parseInt(scope.main.ngModel)/100) * o[0];
+                }
+              };
+
+              isolate.surfaceTrackFill.setSize([new_size(original_size), original_size[1]]);
+            };
+
             scope.$watch('main.ngModel',
               function(){
                 if(scope.main.ngModel !== undefined){
                   var original_size = JSON.parse(attrs.faSize);
                   if (typeof(scope.main.ngModel) === 'number') {
-                    var new_size = function(o) {
-                      if ((parseInt(scope.main.ngModel)/100) >= 1) {
-                        if (isolate.surfaceTrackFillModifier.getOpacity() !== 1) {
-                          isolate.surfaceTrackFillModifier.setOpacity(1);
-                        }
-                        return o[0];
-                      } else if ((parseInt(scope.main.ngModel)/100) <= 0) {
-                        if (isolate.surfaceTrackFillModifier.getOpacity() !== 0) {
-                          isolate.surfaceTrackFillModifier.setOpacity(0);
-                        }
-                        return 0;
-                      } else {
-                        if (isolate.surfaceTrackFillModifier.getOpacity() !== 1) {
-                          isolate.surfaceTrackFillModifier.setOpacity(1);
-                        }
-                        return (parseInt(scope.main.ngModel)/100) * o[0];
-                      }
-                    };
-                    isolate.surfaceTrackFill.setSize([new_size(original_size), original_size[1]]);
+                    setTrackFillSize();
                   } else if (typeof(scope.main.ngModel) === 'boolean') {
                     isolate.surfaceTrackFillModifier.setOpacity(scope.main.ngModel ? 1 : 0, {curve: 'easeOut', duration : 200});
                   }
@@ -677,6 +699,10 @@ angular.module('famous.angular')
               },
               true
             );
+
+            scope.envyEvents.on('thumbUpdate', function(e) {
+              isolate.surfaceTrackFill.setSize([e.pos, JSON.parse(attrs.faSize)[1]]);
+            });
 
             // FIXME: This shouldn't be necessary.
             // cont.: This should also be for vertical and horizontal.

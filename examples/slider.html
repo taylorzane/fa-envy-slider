@@ -12,11 +12,12 @@
     <script src="../src/app.js"></script>
   </head>
   <body ng-app="famous.angular" style="background-color: #ccc">
+  <!-- fa-draggable-update="main.brightnessSet(arg1, {user: true})" -->
     <fa-app style="height: 200px" ng-controller="MainCtrl as main">
 
       <envy-slider
         fa-update-when-dragging="false"
-        fa-draggable-update="main.brightnessSet(arg1, {user: true})"
+
         ng-model="main.brightness"
         fa-size="[40,40]">
         <envy-track fa-translate="[40,46,0]" fa-size="[200,4]" fa-background-color="'silver'"/>
