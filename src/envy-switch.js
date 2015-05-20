@@ -130,9 +130,9 @@ angular.module('famous.angular')
 
             isolate.draggable.on('end', function(e) {
               if (scope.draggableCallbacks.end) {
-                if (e.position[0] === 0) {
+                if (e.position[0] === 0 && initialDragPosition === e.position[0]) {
                   scope.main.faDraggableEnd({arg1: true});
-                } else if (e.position[0] === faDrag[dragDirection]) {
+                } else if (e.position[0] === faDrag[dragDirection] && initialDragPosition === e.position[0]) {
                   scope.main.faDraggableEnd({arg1: false});
                 } else if (e.position[0] <= initialDragPosition) {
                   if (e.position[0] <= faDrag[dragDirection]*.5) {
@@ -148,11 +148,13 @@ angular.module('famous.angular')
                   } else {
                     isolate.draggable.setPosition([0,0]);
                   }
+                } else {
+                  console.log('phooey', e.position[0]);
                 }
               } else {
-                if (e.position[0] === 0) {
+                if (e.position[0] === 0 && initialDragPosition === e.position[0]) {
                   scope.main.ngModel = true;
-                } else if (e.position[0] === faDrag[dragDirection]) {
+                } else if (e.position[0] === faDrag[dragDirection] && initialDragPosition === e.position[0]) {
                   scope.main.ngModel = false;
                 } else if (e.position[0] <= initialDragPosition) {
                   if (e.position[0] <= faDrag[dragDirection]*.5) {
@@ -168,6 +170,8 @@ angular.module('famous.angular')
                   } else {
                     isolate.draggable.setPosition([0,0]);
                   }
+                } else {
+                  console.log('phooey', e.position[0]);
                 }
               }
 
