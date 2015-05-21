@@ -69,7 +69,9 @@ angular.module('famous.angular')
 
             scope.envyEvents.on('thumbUpdate', function(e) {
               // debugger;
-              scope.main.ngModel = e.pos;
+              console.log(e.pos);
+              // scope.main.ngModel = e.pos;
+              scope.main.faDraggableUpdate({arg1: e.pos});
               // scope.main.faDraggableUpdate({arg1: (e.pos/2)});
               // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
               if(!scope.$$phase && !$rootScope.$$phase) {
@@ -483,11 +485,11 @@ angular.module('famous.angular')
             isolate.draggable.on('end', function(e) {
               isDragging = false;
 
-              if (scope.draggableCallbacks.end) {
-                scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
-              } else {
-                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
-              }
+              // if (scope.draggableCallbacks.end) {
+              //   scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              // } else {
+              //   scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              // }
 
               // if (!$rootScope.$$phase) $rootScope.$digest();
              // if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
@@ -512,7 +514,7 @@ angular.module('famous.angular')
             scope.$watch('main.ngModel',
               function(){
                 if(scope.main.ngModel !== undefined){
-                  console.log('scope.main.ngModel: ', scope.main.ngModel);
+                  // console.log('scope.main.ngModel: ', scope.main.ngModel);
                   var new_pos = function() {
                     if ((parseInt(scope.main.ngModel)/100) > 1) {
                       return faDrag[dragDirection];
@@ -526,7 +528,7 @@ angular.module('famous.angular')
                   // if update-when-dragging is false and user is not dragging OR update-when-dragging is true
                   if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging || scope.main.faUpdateWhenDragging === undefined) {
                     isolate.draggable.setPosition([new_pos(), 0]);
-                    scope.envyEvents.trigger('thumbUpdate', {pos: new_pos()});
+                    // scope.envyEvents.trigger('thumbUpdate', {pos: new_pos()});
                   }
                 }
               },
