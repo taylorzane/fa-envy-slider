@@ -10,10 +10,10 @@
 */
 
 angular.module('famous.angular')
-  .directive('envyThumbNoScope', ['$famous', '$famousDecorator', '$interpolate', '$controller', '$compile', '$rootScope', function ($famous, $famousDecorator, $interpolate, $controller, $compile, $rootScope) {
+  .directive('envyThumb', ['$famous', '$famousDecorator', '$interpolate', '$controller', '$compile', '$rootScope', function ($famous, $famousDecorator, $interpolate, $controller, $compile, $rootScope) {
     'use strict';
     return {
-      scope: false,
+      scope: true,
       transclude: true,
       template: '<div class="fa-surface"></div>',
       restrict: 'EA',
@@ -82,6 +82,8 @@ angular.module('famous.angular')
 
             // isolate.thumbEvent = new EventHandler();
 
+            debugger;
+
             var draggableRange = {
               xRange: [0, 0],
               yRange: [0, 0]
@@ -131,9 +133,9 @@ angular.module('famous.angular')
               /* END CALLBACK FUNCTIONALITY */
 
 
-              // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
+              if(!scope.$$phase && !$rootScope.$$phase) scope.$apply();
 
-              scope.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
+              // scope.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
             });
 
             isolate.draggable.on('end', function(e) {
@@ -160,9 +162,10 @@ angular.module('famous.angular')
               isolate.modifier = new Modifier({
                 transform: Transform.translate.apply(this, JSON.parse(attrs.faTranslate))
               });
-              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.modifier).add(isolate.surfaceThumb);
+              // scope.$parent.isolate[scope.$parent.$id]
+              scope.$parent.isolate[scope.$parent.$id].renderNode.add(isolate.draggable).add(isolate.modifier).add(isolate.surfaceThumb);
             } else {
-              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.surfaceThumb);
+              scope.$parent.isolate[scope.$parent.$id].renderNode.add(isolate.draggable).add(isolate.surfaceThumb);
             }
 
             scope.$watch('main.ngModel',
