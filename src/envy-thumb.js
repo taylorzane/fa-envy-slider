@@ -139,11 +139,11 @@ angular.module('famous.angular')
             isolate.draggable.on('end', function(e) {
               isDragging = false;
 
-              if (scope.draggableCallbacks.end) {
-                scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
-              } else {
-                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
-              }
+              // if (scope.draggableCallbacks.end) {
+              //   scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              // } else {
+              //   scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              // }
 
               // if (!$rootScope.$$phase) $rootScope.$digest();
              // if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
@@ -168,7 +168,7 @@ angular.module('famous.angular')
             scope.$watch('main.ngModel',
               function(){
                 if(scope.main.ngModel !== undefined){
-                  console.log('scope.main.ngModel: ', scope.main.ngModel);
+                  // console.log('scope.main.ngModel: ', scope.main.ngModel);
                   var new_pos = function() {
                     if ((parseInt(scope.main.ngModel)/100) > 1) {
                       return faDrag[dragDirection];
