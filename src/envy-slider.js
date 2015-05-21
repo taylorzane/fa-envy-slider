@@ -47,8 +47,10 @@ angular.module('famous.angular')
               }
             );
 
-            //  FIXME: This shouldn't be necessary to init the binding.
-            if (scope.main.ngModel === undefined) scope.main.ngModel = 0; // jshint ignore:line
+            // FIXME: This shouldn't be necessary to init the binding.
+            if (scope.main.ngModel === undefined) {
+              scope.main.ngModel = 0;
+            }
 
             scope.draggableCallbacks = function(){
               var callbacks = { start: false, update: false, end: false };

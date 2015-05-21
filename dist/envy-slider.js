@@ -47,8 +47,10 @@ angular.module('famous.angular')
               }
             );
 
-            //  FIXME: This shouldn't be necessary to init the binding.
-            if (scope.main.ngModel === undefined) scope.main.ngModel = 0; // jshint ignore:line
+            // FIXME: This shouldn't be necessary to init the binding.
+            if (scope.main.ngModel === undefined) {
+              scope.main.ngModel = 0;
+            }
 
             scope.draggableCallbacks = function(){
               var callbacks = { start: false, update: false, end: false };
@@ -596,18 +598,6 @@ angular.module('famous.angular')
             var Draggable = $famous['famous/modifiers/Draggable'];
             var EventHandler = $famous['famous/core/EventHandler'];
 
-            // scope.$watch(
-            //   function(){
-            //     return isolate.getProperties();
-            //   },
-            //   function(){
-            //     if(isolate.surfaceThumb) {
-            //       isolate.surfaceThumb.setProperties(isolate.getProperties());
-            //     }
-            //   },
-            //   true
-            // );
-
             var _propToFaProp = function(prop){
               return "fa" + prop.charAt(0).toUpperCase() + prop.slice(1);
             };
@@ -631,26 +621,9 @@ angular.module('famous.angular')
               }
               return baseProperties;
             };
-            var _sizeAnimateTimeStamps = [];
-
-            // attrs.$observe('faSize',function () {
-            //   isolate.surfaceThumb.setSize(scope.$eval(attrs.faSize));
-            //   _sizeAnimateTimeStamps.push(new Date());
-
-            //   if(_sizeAnimateTimeStamps.length > 5) {
-            //     if((_sizeAnimateTimeStamps[4]-_sizeAnimateTimeStamps[0]) <= 1000 ){
-            //       console.warn("Using fa-size on fa-surface to animate is significantly non-performant, prefer to use fa-size on an fa-modifier surrounding a fa-surface");
-            //     }
-            //     _sizeAnimateTimeStamps.shift();
-            //   }
-            // });
 
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
-
-            // isolate.thumbEvent = new EventHandler();
-
-            // debugger;
 
             var draggableRange = {
               xRange: [0, 0],
@@ -681,43 +654,35 @@ angular.module('famous.angular')
               isDragging = true;
 
               if (scope.draggableCallbacks.start) {
-                // scope.main.faDraggableStart({arg1: 'some_value'});
+                scope.main.faDraggableStart({arg1: 'some_value'});
               } else {
-                // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
               }
-
-             // if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
             isolate.draggable.on('update', function(e) {
               /* START CALLBACK FUNCTIONALITY */
 
-              // if (scope.draggableCallbacks.update) {
-              scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
-              // if (!$rootScope.$$phase) $rootScope.$digest();
-              // } else {
-              // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
-              // }
+              if (scope.draggableCallbacks.update) {
+                scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              } else {
+                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              }
               /* END CALLBACK FUNCTIONALITY */
-              scope.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
 
-              scope.$applyAsync();
-              // if(!scope.$$phase && !$rootScope.$$phase) scope.$digest();
-
-
+              if(!scope.$$phase && !$rootScope.$$phase) {
+                scope.$applyAsync();
+              }
             });
 
             isolate.draggable.on('end', function(e) {
               isDragging = false;
 
-              // if (scope.draggableCallbacks.end) {
-              //   scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
-              // } else {
-              //   scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
-              // }
-
-              // if (!$rootScope.$$phase) $rootScope.$digest();
-             // if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
+              if (scope.draggableCallbacks.end) {
+                scope.main.faDraggableEnd({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              } else {
+                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              }
             });
 
             isolate.surfaceThumb = new Surface({
@@ -731,14 +696,12 @@ angular.module('famous.angular')
               isolate.modifier = new Modifier({
                 transform: Transform.translate.apply(this, JSON.parse(attrs.faTranslate))
               });
-              // scope.$parent.isolate[scope.$parent.$id]
               scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.modifier).add(isolate.surfaceThumb);
             } else {
               scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.surfaceThumb);
             }
 
             scope.envyEvents.on('ngModelUpdate', function(data) {
-              // console.log('scope.main.ngModel: ', scope.main.ngModel);
               var new_pos = function() {
                 if ((parseInt(data.ngModel)/100) > 1) {
                   return faDrag[dragDirection];
@@ -752,7 +715,6 @@ angular.module('famous.angular')
               // if update-when-dragging is false and user is not dragging OR update-when-dragging is true
               if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging || scope.main.faUpdateWhenDragging === undefined) {
                 isolate.draggable.setPosition([new_pos(), 0]);
-                // scope.envyEvents.trigger('thumbUpdate', {pos: new_pos()});
               }
             });
 
@@ -762,18 +724,6 @@ angular.module('famous.angular')
             if (attrs.class) {
               isolate.surfaceThumb.setClasses(attrs['class'].split(' '));
             }
-            if(attrs.faDeploy){
-              isolate.surfaceThumb.on("deploy",function(){
-                var fn = scope[attrs.faDeploy];
-                if(typeof fn === 'function') {
-                  fn(attrs.faDeploy)();
-                }
-              });
-            }
-            // Throw an exception if anyother famous scene graph element is added on fa-surface.
-            $famousDecorator.sequenceWith(scope, function(data) {
-              throw new Error('Surfaces are leaf nodes of the Famo.us render tree and cannot accept rendernode children.  To include additional Famo.us content inside of a fa-surface, that content must be enclosed in an additional fa-app.');
-            });
           },
           post: function(scope, element, attrs, ctrl, transclude){
             var isolate = $famousDecorator.ensureIsolate(scope);
@@ -823,18 +773,6 @@ angular.module('famous.angular')
             var Modifier = $famous['famous/modifiers/StateModifier'];
             var EventHandler = $famous['famous/core/EventHandler'];
 
-            // scope.$watch(
-            //   function(){
-            //     return isolate.getProperties();
-            //   },
-            //   function(){
-            //     if(isolate.surfaceTrackFill) {
-            //       isolate.surfaceTrackFill.setProperties(isolate.getProperties());
-            //     }
-            //   },
-            //   true
-            // );
-
             var _propToFaProp = function(prop){
               return "fa" + prop.charAt(0).toUpperCase() + prop.slice(1);
             };
@@ -858,24 +796,9 @@ angular.module('famous.angular')
               }
               return baseProperties;
             };
-            var _sizeAnimateTimeStamps = [];
-
-            attrs.$observe('faSize',function () {
-              isolate.surfaceTrackFill.setSize(scope.$eval(attrs.faSize));
-              _sizeAnimateTimeStamps.push(new Date());
-
-              if(_sizeAnimateTimeStamps.length > 5) {
-                if((_sizeAnimateTimeStamps[4]-_sizeAnimateTimeStamps[0]) <= 1000 ){
-                  console.warn("Using fa-size on fa-surface to animate is significantly non-performant, prefer to use fa-size on an fa-modifier surrounding a fa-surface");
-                }
-                _sizeAnimateTimeStamps.shift();
-              }
-            });
 
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
-
-            isolate.trackEvent = new EventHandler();
 
             isolate.surfaceTrackFill = new Surface({
               size: scope.$eval(attrs.faSize),
@@ -893,15 +816,15 @@ angular.module('famous.angular')
               scope.isolate[scope.$id].renderNode.add(isolate.surfaceTrackFill);
             }
 
-            var setTrackFillSize = function() {
+            var setTrackFillSize = function(model) {
               var original_size = JSON.parse(attrs.faSize);
               var new_size = function(o) {
-                if ((parseInt(scope.main.ngModel)/100) >= 1) {
+                if ((parseInt(model)/100) >= 1) {
                   if (isolate.surfaceTrackFillModifier.getOpacity() !== 1) {
                     isolate.surfaceTrackFillModifier.setOpacity(1);
                   }
                   return o[0];
-                } else if ((parseInt(scope.main.ngModel)/100) <= 0) {
+                } else if ((parseInt(model)/100) <= 0) {
                   if (isolate.surfaceTrackFillModifier.getOpacity() !== 0) {
                     isolate.surfaceTrackFillModifier.setOpacity(0);
                   }
@@ -910,36 +833,16 @@ angular.module('famous.angular')
                   if (isolate.surfaceTrackFillModifier.getOpacity() !== 1) {
                     isolate.surfaceTrackFillModifier.setOpacity(1);
                   }
-                  return (parseInt(scope.main.ngModel)/100) * o[0];
+                  return (parseInt(model)/100) * o[0];
                 }
               };
 
               isolate.surfaceTrackFill.setSize([new_size(original_size), original_size[1]]);
             };
 
-            // scope.$watch('main.ngModel',
-            //   function(){
-            //     if(scope.main.ngModel !== undefined){
-            //       var original_size = JSON.parse(attrs.faSize);
-            //       if (typeof(scope.main.ngModel) === 'number') {
-            //         setTrackFillSize();
-            //       } else if (typeof(scope.main.ngModel) === 'boolean') {
-            //         isolate.surfaceTrackFillModifier.setOpacity(scope.main.ngModel ? 1 : 0, {curve: 'easeOut', duration : 200});
-            //       }
-            //     }
-            //   },
-            //   true
-            // );
-
-            // scope.envyEvents.on('thumbUpdate', function(e) {
-            //   isolate.surfaceTrackFill.setSize([e.pos, JSON.parse(attrs.faSize)[1]]);
-            // });
-
             // FIXME: This shouldn't be necessary.
             // cont.: This should also be for vertical and horizontal.
             // Bootstrap the track.
-            // isolate.surfaceTrackFillModifier.setOpacity(0); // FIXME: Should we be doing this?
-
             if (typeof(scope.main.ngModel) === 'number') {
               isolate.surfaceTrackFill.setSize([0, scope.$eval(attrs.faSize)[1]]);
             } else if (typeof(scope.main.ngModel) === 'boolean') {
@@ -947,13 +850,12 @@ angular.module('famous.angular')
             }
 
             scope.envyEvents.on('ngModelUpdate', function(data) {
-              var original_size = JSON.parse(attrs.faSize);
               if (typeof(data.ngModel) === 'number') {
-                setTrackFillSize();
+                setTrackFillSize(data.ngModel);
               } else if (typeof(data.ngModel) === 'boolean') {
                 isolate.surfaceTrackFillModifier.setOpacity(data.ngModel ? 1 : 0, {curve: 'easeOut', duration : 200});
               }
-            })
+            });
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */
@@ -961,18 +863,6 @@ angular.module('famous.angular')
             if (attrs.class) {
               isolate.surfaceTrackFill.setClasses(attrs['class'].split(' '));
             }
-            if(attrs.faDeploy){
-              isolate.surfaceTrackFill.on("deploy",function(){
-                var fn = scope[attrs.faDeploy];
-                if(typeof fn === 'function') {
-                  fn(attrs.faDeploy)();
-                }
-              });
-            }
-            // Throw an exception if anyother famous scene graph element is added on fa-surface.
-            $famousDecorator.sequenceWith(scope, function(data) {
-              throw new Error('Surfaces are leaf nodes of the Famo.us render tree and cannot accept rendernode children.  To include additional Famo.us content inside of a fa-surface, that content must be enclosed in an additional fa-app.');
-            });
           },
           post: function(scope, element, attrs, ctrl, transclude){
             var isolate = $famousDecorator.ensureIsolate(scope);
@@ -1021,18 +911,6 @@ angular.module('famous.angular')
             var Transform = $famous['famous/core/Transform'];
             var Modifier = $famous['famous/core/Modifier'];
 
-            // scope.$watch(
-            //   function(){
-            //     return isolate.getProperties();
-            //   },
-            //   function(){
-            //     if(isolate.renderNode) {
-            //       isolate.surfaceTrack.setProperties(isolate.getProperties());
-            //     }
-            //   },
-            //   true
-            // );
-
             var _propToFaProp = function(prop){
               return "fa" + prop.charAt(0).toUpperCase() + prop.slice(1);
             };
@@ -1056,19 +934,6 @@ angular.module('famous.angular')
               }
               return baseProperties;
             };
-            var _sizeAnimateTimeStamps = [];
-
-            attrs.$observe('faSize',function () {
-              isolate.surfaceTrack.setSize(scope.$eval(attrs.faSize));
-              _sizeAnimateTimeStamps.push(new Date());
-
-              if(_sizeAnimateTimeStamps.length > 5) {
-                if((_sizeAnimateTimeStamps[4]-_sizeAnimateTimeStamps[0]) <= 1000 ){
-                  console.warn("Using fa-size on fa-surface to animate is significantly non-performant, prefer to use fa-size on an fa-modifier surrounding a fa-surface");
-                }
-                _sizeAnimateTimeStamps.shift();
-              }
-            });
 
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
@@ -1093,18 +958,6 @@ angular.module('famous.angular')
             if (attrs.class) {
               isolate.surfaceTrack.setClasses(attrs['class'].split(' '));
             }
-            if(attrs.faDeploy){
-              isolate.surfaceTrack.on("deploy",function(){
-                var fn = scope[attrs.faDeploy];
-                if(typeof fn === 'function') {
-                  fn(attrs.faDeploy)();
-                }
-              });
-            }
-            // Throw an exception if anyother famous scene graph element is added on fa-surface.
-            $famousDecorator.sequenceWith(scope, function(data) {
-              throw new Error('Surfaces are leaf nodes of the Famo.us render tree and cannot accept rendernode children.  To include additional Famo.us content inside of a fa-surface, that content must be enclosed in an additional fa-app.');
-            });
           },
           post: function(scope, element, attrs, ctrl, transclude){
             var isolate = $famousDecorator.ensureIsolate(scope);
