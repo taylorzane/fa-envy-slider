@@ -21,7 +21,7 @@ angular.module('envySlider').controller('MainCtrl', function($scope, $famous, $t
   }, 5000);
 
   this.brightnessSet = function(e,d) {
-    // console.log('brightnessSet', e, d);
+    console.log('brightnessSet', e, d);
     _this.brightness = e;
   };
 
