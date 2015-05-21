@@ -133,10 +133,8 @@ angular.module('famous.angular')
 
               // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
 
-              // scope.envyEvents.trigger('thumbUpdate', {pos: e.position[0]});
+              scope.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
             });
-
-            debugger;
 
             isolate.draggable.on('end', function(e) {
               isDragging = false;
