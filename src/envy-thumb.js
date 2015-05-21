@@ -80,7 +80,7 @@ angular.module('famous.angular')
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
 
-            isolate.thumbEvent = new EventHandler();
+            // isolate.thumbEvent = new EventHandler();
 
             var draggableRange = {
               xRange: [0, 0],
@@ -123,16 +123,20 @@ angular.module('famous.angular')
               /* START CALLBACK FUNCTIONALITY */
 
               // if (scope.draggableCallbacks.update) {
-              //   scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              // if (!$rootScope.$$phase) $rootScope.$digest();
               // } else {
-              //   scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
               // }
-
               /* END CALLBACK FUNCTIONALITY */
+
+
               // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
 
-              scope.envyEvents.trigger('thumbUpdate', {pos: e.position[0]});
+              // scope.envyEvents.trigger('thumbUpdate', {pos: e.position[0]});
             });
+
+            debugger;
 
             isolate.draggable.on('end', function(e) {
               isDragging = false;
@@ -143,7 +147,7 @@ angular.module('famous.angular')
                 scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
               }
 
-
+              // if (!$rootScope.$$phase) $rootScope.$digest();
              // if (!$rootScope.$$phase) $rootScope.$digest(); // jshint ignore:line
             });
 
@@ -166,6 +170,7 @@ angular.module('famous.angular')
             scope.$watch('main.ngModel',
               function(){
                 if(scope.main.ngModel !== undefined){
+                  console.log('scope.main.ngModel: ', scope.main.ngModel);
                   var new_pos = function() {
                     if ((parseInt(scope.main.ngModel)/100) > 1) {
                       return faDrag[dragDirection];

@@ -9,5 +9,8 @@
   "dependencies": {
     "famous-angular": "0.5.2"
   },
-  "ignore": []
+  "ignore": [],
+  "devDependencies": {
+    "angular-digest-hud": "~0.1.7"
+  }
 }

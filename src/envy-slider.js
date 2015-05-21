@@ -11,7 +11,7 @@
 */
 
 angular.module('famous.angular')
-  .directive('envySlider', ["$famous", "$famousDecorator", function ($famous, $famousDecorator) {
+  .directive('envySlider', ["$famous", "$famousDecorator", "$rootScope", function ($famous, $famousDecorator, $rootScope) {
     'use strict';
     return {
       bindToController: true,
@@ -72,6 +72,9 @@ angular.module('famous.angular')
               // scope.main.ngModel = e.pos/2;
               scope.main.faDraggableUpdate({arg1: (e.pos/2)});
               // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
+              if(!scope.$$phase && !$rootScope.$$phase) {
+                scope.$digest();
+              }
             });
 
             console.log('envy-slider loaded.');
