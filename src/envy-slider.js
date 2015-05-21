@@ -69,7 +69,9 @@ angular.module('famous.angular')
 
             scope.envyEvents.on('thumbUpdate', function(e) {
               // debugger;
-              scope.main.ngModel = e.pos/2;
+              // scope.main.ngModel = e.pos/2;
+              scope.main.faDraggableUpdate({arg1: (e.pos/2)});
+              // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
             });
 
             console.log('envy-slider loaded.');

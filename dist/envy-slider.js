@@ -69,7 +69,9 @@ angular.module('famous.angular')
 
             scope.envyEvents.on('thumbUpdate', function(e) {
               // debugger;
-              scope.main.ngModel = e.pos/2;
+              // scope.main.ngModel = e.pos/2;
+              scope.main.faDraggableUpdate({arg1: (e.pos/2)});
+              // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
             });
 
             console.log('envy-slider loaded.');
@@ -461,14 +463,14 @@ angular.module('famous.angular')
             isolate.draggable.on('update', function(e) {
               /* START CALLBACK FUNCTIONALITY */
 
-              if (scope.draggableCallbacks.update) {
-                scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
-              } else {
-                scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
-              }
+              // if (scope.draggableCallbacks.update) {
+              //   scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              // } else {
+              //   scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
+              // }
 
               /* END CALLBACK FUNCTIONALITY */
-
+              // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
 
               scope.envyEvents.trigger('thumbUpdate', {pos: e.position[0]});
             });
