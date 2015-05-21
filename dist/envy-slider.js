@@ -925,19 +925,19 @@ angular.module('famous.angular')
               isolate.surfaceTrackFill.setSize([new_size(original_size), original_size[1]]);
             };
 
-            scope.$watch('main.ngModel',
-              function(){
-                if(scope.main.ngModel !== undefined){
-                  var original_size = JSON.parse(attrs.faSize);
-                  if (typeof(scope.main.ngModel) === 'number') {
-                    setTrackFillSize();
-                  } else if (typeof(scope.main.ngModel) === 'boolean') {
-                    isolate.surfaceTrackFillModifier.setOpacity(scope.main.ngModel ? 1 : 0, {curve: 'easeOut', duration : 200});
-                  }
-                }
-              },
-              true
-            );
+            // scope.$watch('main.ngModel',
+            //   function(){
+            //     if(scope.main.ngModel !== undefined){
+            //       var original_size = JSON.parse(attrs.faSize);
+            //       if (typeof(scope.main.ngModel) === 'number') {
+            //         setTrackFillSize();
+            //       } else if (typeof(scope.main.ngModel) === 'boolean') {
+            //         isolate.surfaceTrackFillModifier.setOpacity(scope.main.ngModel ? 1 : 0, {curve: 'easeOut', duration : 200});
+            //       }
+            //     }
+            //   },
+            //   true
+            // );
 
             scope.envyEvents.on('thumbUpdate', function(e) {
               isolate.surfaceTrackFill.setSize([e.pos, JSON.parse(attrs.faSize)[1]]);
