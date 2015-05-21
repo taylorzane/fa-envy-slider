@@ -73,7 +73,7 @@ angular.module('famous.angular')
               // scope.main.faDraggableUpdate({arg1: (e.pos/2)});
               // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
               if(!scope.$$phase && !$rootScope.$$phase) {
-                scope.$digest();
+                scope.$apply();
               }
             });
 
