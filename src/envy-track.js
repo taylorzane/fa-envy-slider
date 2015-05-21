@@ -25,7 +25,7 @@ angular.module('famous.angular')
 
             var Surface = $famous['famous/core/Surface'];
             var Transform = $famous['famous/core/Transform'];
-            var Modifier = $famous['famous/core/Modifier'];
+            var Modifier = $famous['famous/modifiers/StateModifier'];
 
             var _propToFaProp = function(prop){
               return "fa" + prop.charAt(0).toUpperCase() + prop.slice(1);
