@@ -18,7 +18,7 @@ angular.module('envySlider').controller('MainCtrl', function($scope, $famous, $t
 
   setInterval(function() {
     _this.t =  Date.now();
-  }, 5000);
+  }, 0);
 
   this.brightnessSet = function(e,d) {
     console.log('brightnessSet', e, d);

@@ -143,7 +143,7 @@ angular.module('famous.angular')
             // FIXME: This shouldn't be necessary.
             // cont.: This should also be for vertical and horizontal.
             // Bootstrap the track.
-            isolate.surfaceTrackFillModifier.setOpacity(0); // FIXME: Should we be doing this?
+            // isolate.surfaceTrackFillModifier.setOpacity(0); // FIXME: Should we be doing this?
 
             if (typeof(scope.main.ngModel) === 'number') {
               isolate.surfaceTrackFill.setSize([0, scope.$eval(attrs.faSize)[1]]);

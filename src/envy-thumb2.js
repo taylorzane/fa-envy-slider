@@ -13,7 +13,7 @@ angular.module('famous.angular')
   .directive('envyThumb', ['$famous', '$famousDecorator', '$interpolate', '$controller', '$compile', '$rootScope', function ($famous, $famousDecorator, $interpolate, $controller, $compile, $rootScope) {
     'use strict';
     return {
-      scope: true,
+      scope: false,
       transclude: true,
       template: '<div class="fa-surface"></div>',
       restrict: 'EA',
@@ -131,12 +131,12 @@ angular.module('famous.angular')
               // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
               // }
               /* END CALLBACK FUNCTIONALITY */
-
+              scope.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
 
               scope.$applyAsync();
               // if(!scope.$$phase && !$rootScope.$$phase) scope.$digest();
 
-              // scope.$parent.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
+
             });
 
             isolate.draggable.on('end', function(e) {
@@ -164,9 +164,9 @@ angular.module('famous.angular')
                 transform: Transform.translate.apply(this, JSON.parse(attrs.faTranslate))
               });
               // scope.$parent.isolate[scope.$parent.$id]
-              scope.$parent.isolate[scope.$parent.$id].renderNode.add(isolate.draggable).add(isolate.modifier).add(isolate.surfaceThumb);
+              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.modifier).add(isolate.surfaceThumb);
             } else {
-              scope.$parent.isolate[scope.$parent.$id].renderNode.add(isolate.draggable).add(isolate.surfaceThumb);
+              scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.surfaceThumb);
             }
 
             scope.$watch('main.ngModel',
