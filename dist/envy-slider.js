@@ -73,7 +73,7 @@ angular.module('famous.angular')
               // scope.main.faDraggableUpdate({arg1: (e.pos/2)});
               // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
               if(!scope.$$phase && !$rootScope.$$phase) {
-                scope.$apply();
+                scope.$applyAsync();
               }
             });
 
@@ -654,7 +654,7 @@ angular.module('famous.angular')
 
             // isolate.thumbEvent = new EventHandler();
 
-            debugger;
+            // debugger;
 
             var draggableRange = {
               xRange: [0, 0],
@@ -697,7 +697,7 @@ angular.module('famous.angular')
               /* START CALLBACK FUNCTIONALITY */
 
               // if (scope.draggableCallbacks.update) {
-              scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              // scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
               // if (!$rootScope.$$phase) $rootScope.$digest();
               // } else {
               // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
@@ -705,9 +705,9 @@ angular.module('famous.angular')
               /* END CALLBACK FUNCTIONALITY */
 
 
-              if(!scope.$$phase && !$rootScope.$$phase) scope.$apply();
+              // if(!scope.$$phase && !$rootScope.$$phase) scope.$digest();
 
-              // scope.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
+              scope.$parent.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
             });
 
             isolate.draggable.on('end', function(e) {
