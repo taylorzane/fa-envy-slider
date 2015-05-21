@@ -69,6 +69,7 @@ angular.module('famous.angular')
 
             scope.envyEvents.on('thumbUpdate', function(e) {
               // debugger;
+              console.log(e.pos);
               scope.main.ngModel = e.pos;
               // scope.main.faDraggableUpdate({arg1: (e.pos/2)});
               // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
