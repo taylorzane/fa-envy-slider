@@ -67,17 +67,13 @@ angular.module('famous.angular')
 
             scope.envyEvents = new EventHandler();
 
-            scope.envyEvents.on('thumbUpdate', function(e) {
-              // scope.main.ngModel = e.pos;
-              // scope.main.faDraggableUpdate({arg1: e.pos});
-              // scope.main.faDraggableUpdate({arg1: (e.pos/2)});
-              // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
-              // if(!scope.$$phase && !$rootScope.$$phase) {
-              scope.$applyAsync();
-              // }
-            });
-
-            console.log('envy-slider loaded.');
+            scope.$watch('main.ngModel',
+              function(newValue){
+                if(scope.main.ngModel !== undefined){
+                  scope.envyEvents.trigger('ngModelUpdate', { ngModel: newValue });
+                }
+              }
+            );
           },
           post: function(scope, element, attrs, ctrl, transclude){
             var isolate = $famousDecorator.ensureIsolate(scope);
@@ -741,29 +737,24 @@ angular.module('famous.angular')
               scope.isolate[scope.$id].renderNode.add(isolate.draggable).add(isolate.surfaceThumb);
             }
 
-            scope.$watch('main.ngModel',
-              function(){
-                if(scope.main.ngModel !== undefined){
-                  // console.log('scope.main.ngModel: ', scope.main.ngModel);
-                  var new_pos = function() {
-                    if ((parseInt(scope.main.ngModel)/100) > 1) {
-                      return faDrag[dragDirection];
-                    } else if ((parseInt(scope.main.ngModel)/100) < 0) {
-                      return 0;
-                    } else {
-                      return (parseInt(scope.main.ngModel)/100) * faDrag[dragDirection];
-                    }
-                  };
-
-                  // if update-when-dragging is false and user is not dragging OR update-when-dragging is true
-                  if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging || scope.main.faUpdateWhenDragging === undefined) {
-                    isolate.draggable.setPosition([new_pos(), 0]);
-                    // scope.envyEvents.trigger('thumbUpdate', {pos: new_pos()});
-                  }
+            scope.envyEvents.on('ngModelUpdate', function(data) {
+              // console.log('scope.main.ngModel: ', scope.main.ngModel);
+              var new_pos = function() {
+                if ((parseInt(data.ngModel)/100) > 1) {
+                  return faDrag[dragDirection];
+                } else if ((parseInt(data.ngModel)/100) < 0) {
+                  return 0;
+                } else {
+                  return (parseInt(data.ngModel)/100) * faDrag[dragDirection];
                 }
-              },
-              true
-            );
+              };
+
+              // if update-when-dragging is false and user is not dragging OR update-when-dragging is true
+              if ((!scope.main.faUpdateWhenDragging && !isDragging) || scope.main.faUpdateWhenDragging || scope.main.faUpdateWhenDragging === undefined) {
+                isolate.draggable.setPosition([new_pos(), 0]);
+                // scope.envyEvents.trigger('thumbUpdate', {pos: new_pos()});
+              }
+            });
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */
@@ -940,9 +931,9 @@ angular.module('famous.angular')
             //   true
             // );
 
-            scope.envyEvents.on('thumbUpdate', function(e) {
-              isolate.surfaceTrackFill.setSize([e.pos, JSON.parse(attrs.faSize)[1]]);
-            });
+            // scope.envyEvents.on('thumbUpdate', function(e) {
+            //   isolate.surfaceTrackFill.setSize([e.pos, JSON.parse(attrs.faSize)[1]]);
+            // });
 
             // FIXME: This shouldn't be necessary.
             // cont.: This should also be for vertical and horizontal.
@@ -954,6 +945,15 @@ angular.module('famous.angular')
             } else if (typeof(scope.main.ngModel) === 'boolean') {
               isolate.surfaceTrackFillModifier.setOpacity(0);
             }
+
+            scope.envyEvents.on('ngModelUpdate', function(data) {
+              var original_size = JSON.parse(attrs.faSize);
+              if (typeof(data.ngModel) === 'number') {
+                setTrackFillSize();
+              } else if (typeof(data.ngModel) === 'boolean') {
+                isolate.surfaceTrackFillModifier.setOpacity(data.ngModel ? 1 : 0, {curve: 'easeOut', duration : 200});
+              }
+            })
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */

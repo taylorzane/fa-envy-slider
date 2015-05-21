@@ -136,9 +136,9 @@ angular.module('famous.angular')
             //   true
             // );
 
-            scope.envyEvents.on('thumbUpdate', function(e) {
-              isolate.surfaceTrackFill.setSize([e.pos, JSON.parse(attrs.faSize)[1]]);
-            });
+            // scope.envyEvents.on('thumbUpdate', function(e) {
+            //   isolate.surfaceTrackFill.setSize([e.pos, JSON.parse(attrs.faSize)[1]]);
+            // });
 
             // FIXME: This shouldn't be necessary.
             // cont.: This should also be for vertical and horizontal.
@@ -150,6 +150,15 @@ angular.module('famous.angular')
             } else if (typeof(scope.main.ngModel) === 'boolean') {
               isolate.surfaceTrackFillModifier.setOpacity(0);
             }
+
+            scope.envyEvents.on('ngModelUpdate', function(data) {
+              var original_size = JSON.parse(attrs.faSize);
+              if (typeof(data.ngModel) === 'number') {
+                setTrackFillSize();
+              } else if (typeof(data.ngModel) === 'boolean') {
+                isolate.surfaceTrackFillModifier.setOpacity(data.ngModel ? 1 : 0, {curve: 'easeOut', duration : 200});
+              }
+            })
 
             /* --- END CUSTOM MAGIC --- */
             /* --- END CUSTOM MAGIC --- */

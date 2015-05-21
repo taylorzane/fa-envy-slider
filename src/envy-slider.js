@@ -67,17 +67,13 @@ angular.module('famous.angular')
 
             scope.envyEvents = new EventHandler();
 
-            scope.envyEvents.on('thumbUpdate', function(e) {
-              // scope.main.ngModel = e.pos;
-              // scope.main.faDraggableUpdate({arg1: e.pos});
-              // scope.main.faDraggableUpdate({arg1: (e.pos/2)});
-              // if(!scope.$$phase && !$rootScope.$$phase) $rootScope.$apply();
-              // if(!scope.$$phase && !$rootScope.$$phase) {
-              scope.$applyAsync();
-              // }
-            });
-
-            console.log('envy-slider loaded.');
+            scope.$watch('main.ngModel',
+              function(newValue){
+                if(scope.main.ngModel !== undefined){
+                  scope.envyEvents.trigger('ngModelUpdate', { ngModel: newValue });
+                }
+              }
+            );
           },
           post: function(scope, element, attrs, ctrl, transclude){
             var isolate = $famousDecorator.ensureIsolate(scope);
