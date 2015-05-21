@@ -28,17 +28,17 @@ angular.module('famous.angular')
             var Modifier = $famous['famous/modifiers/StateModifier'];
             var EventHandler = $famous['famous/core/EventHandler'];
 
-            scope.$watch(
-              function(){
-                return isolate.getProperties();
-              },
-              function(){
-                if(isolate.surfaceTrackFill) {
-                  isolate.surfaceTrackFill.setProperties(isolate.getProperties());
-                }
-              },
-              true
-            );
+            // scope.$watch(
+            //   function(){
+            //     return isolate.getProperties();
+            //   },
+            //   function(){
+            //     if(isolate.surfaceTrackFill) {
+            //       isolate.surfaceTrackFill.setProperties(isolate.getProperties());
+            //     }
+            //   },
+            //   true
+            // );
 
             var _propToFaProp = function(prop){
               return "fa" + prop.charAt(0).toUpperCase() + prop.slice(1);

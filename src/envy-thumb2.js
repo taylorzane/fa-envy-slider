@@ -28,17 +28,17 @@ angular.module('famous.angular')
             var Draggable = $famous['famous/modifiers/Draggable'];
             var EventHandler = $famous['famous/core/EventHandler'];
 
-            scope.$watch(
-              function(){
-                return isolate.getProperties();
-              },
-              function(){
-                if(isolate.surfaceThumb) {
-                  isolate.surfaceThumb.setProperties(isolate.getProperties());
-                }
-              },
-              true
-            );
+            // scope.$watch(
+            //   function(){
+            //     return isolate.getProperties();
+            //   },
+            //   function(){
+            //     if(isolate.surfaceThumb) {
+            //       isolate.surfaceThumb.setProperties(isolate.getProperties());
+            //     }
+            //   },
+            //   true
+            // );
 
             var _propToFaProp = function(prop){
               return "fa" + prop.charAt(0).toUpperCase() + prop.slice(1);
@@ -65,17 +65,17 @@ angular.module('famous.angular')
             };
             var _sizeAnimateTimeStamps = [];
 
-            attrs.$observe('faSize',function () {
-              isolate.surfaceThumb.setSize(scope.$eval(attrs.faSize));
-              _sizeAnimateTimeStamps.push(new Date());
+            // attrs.$observe('faSize',function () {
+            //   isolate.surfaceThumb.setSize(scope.$eval(attrs.faSize));
+            //   _sizeAnimateTimeStamps.push(new Date());
 
-              if(_sizeAnimateTimeStamps.length > 5) {
-                if((_sizeAnimateTimeStamps[4]-_sizeAnimateTimeStamps[0]) <= 1000 ){
-                  console.warn("Using fa-size on fa-surface to animate is significantly non-performant, prefer to use fa-size on an fa-modifier surrounding a fa-surface");
-                }
-                _sizeAnimateTimeStamps.shift();
-              }
-            });
+            //   if(_sizeAnimateTimeStamps.length > 5) {
+            //     if((_sizeAnimateTimeStamps[4]-_sizeAnimateTimeStamps[0]) <= 1000 ){
+            //       console.warn("Using fa-size on fa-surface to animate is significantly non-performant, prefer to use fa-size on an fa-modifier surrounding a fa-surface");
+            //     }
+            //     _sizeAnimateTimeStamps.shift();
+            //   }
+            // });
 
             /* --- START CUSTOM MAGIC --- */
             /* --- START CUSTOM MAGIC --- */
@@ -125,7 +125,7 @@ angular.module('famous.angular')
               /* START CALLBACK FUNCTIONALITY */
 
               // if (scope.draggableCallbacks.update) {
-              // scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
+              scope.main.faDraggableUpdate({arg1: (e.position[0]/faDrag[dragDirection])*100});
               // if (!$rootScope.$$phase) $rootScope.$digest();
               // } else {
               // scope.main.ngModel = (e.position[0]/faDrag[dragDirection])*100;
@@ -133,9 +133,10 @@ angular.module('famous.angular')
               /* END CALLBACK FUNCTIONALITY */
 
 
+              scope.$applyAsync();
               // if(!scope.$$phase && !$rootScope.$$phase) scope.$digest();
 
-              scope.$parent.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
+              // scope.$parent.envyEvents.trigger('thumbUpdate', {pos: (e.position[0]/faDrag[dragDirection])*100});
             });
 
             isolate.draggable.on('end', function(e) {
